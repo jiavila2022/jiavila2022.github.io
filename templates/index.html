@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Picker</title>
+    <style>
+    table {
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px 15px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #eee;
+    }
+</style>
+</head>
+
+<body>
+
+    <h1>Select People</h1>
+
+    <label>
+        <input type="checkbox" name="person" value="Adrian">
+        Adrian
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Alex">
+        Alex
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Alex Sales">
+        Alex Sales
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Alma">
+        Alma
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Angela">
+        Angela
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Anna">
+        Anna
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Braulio">
+        Braulio
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Carlos G">
+        Carlos G
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Carlos R">
+        Carlos R
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Chance">
+        Chance
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Daniel">
+        Daniel
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Efren">
+        Efren
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Giovanni">
+        Giovanni
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Henry">
+        Henry
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Hubert">
+        Hubert
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="JJ">
+        JJ
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Jacob">
+        Jacob
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Jalen">
+        Jalen
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Janet">
+        Janet
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Jason">
+        Jason
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Jovanni">
+        Jovanni
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Kassi">
+        Kassi
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Marian">
+        Marian
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Mario">
+        Mario
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Nic">
+        Nic
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Nish">
+        Nish
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Noel">
+        Noel
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Ramon">
+        Ramon
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Sebastian">
+        Sebastian
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Sophia">
+        Sophia
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Steven">
+        Steven
+    </label>
+    <br>
+
+    <label>
+        <input type="checkbox" name="person" value="Will">
+        Will
+    </label>
+    <br><br>
+
+    <label for="numTeams">Number of Teams:</label>
+
+    <select id="numTeams">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
+
+    <br><br>
+
+    <button onclick="submitPeople()">Submit</button>
+
+    <p id="result"></p>
+
+    <img id="summaryImage" style="max-width: 100%; display: none;">
+
+    <script>
+        async function submitPeople() {
+            const checkedBoxes = document.querySelectorAll(
+                'input[name="person"]:checked'
+            );
+
+            const selectedNames = Array.from(checkedBoxes).map(
+                checkbox => checkbox.value
+            );
+
+            const numTeams = parseInt(
+                document.getElementById("numTeams").value
+            );
+
+            const response = await fetch("/make-teams", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    names: selectedNames,
+                    num_teams: numTeams
+                })
+            });
+
+            const result = await response.json();
+
+            // Display teams
+            document.getElementById("result").innerHTML =
+                result.teams;
+
+            // Display heatmap
+            const image = document.getElementById("summaryImage");
+
+            image.src = "data:image/png;base64," + result.image;
+            image.style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
+
+<!-- Run the following command to start a local development server: -->
+<!-- python -m http.server 8000 -->
